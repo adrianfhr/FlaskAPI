@@ -5,12 +5,8 @@ from marshmallow import ValidationError, validate, validates_schema
 from marshmallow.fields import String, Integer, UUID
 
 class UserSchema(marshmallow.SQLAlchemyAutoSchema):
-    id = UUID(dump_only=True)  # Menambahkan ID sebagai field UUID dan dump_only
-    username = String(required=True)
+    
     email = String(required=True, validate=validate.Email())
-    age = Integer(required=True)
-    first_name = String(required=True)
-    last_name = String(required=True)
 
     @validates_schema
     def validate_data(self, data, **kwargs):
@@ -26,3 +22,20 @@ class UserSchema(marshmallow.SQLAlchemyAutoSchema):
     class Meta:
         model = User
         load_instance = True
+        exclude = ['_password']
+
+class UserCreateSchema(UserSchema):
+    password = String(
+        required=True,
+        validate=[
+            validate.Length(min=8),
+            validate.Regexp(
+                r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$',
+                error='Password must contain at least 8 characters long and include one uppercase letter, one lowercase letter, and one number'
+            )
+        ]
+    )  # Menambahkan field password
+    class Meta:
+        model = User
+        load_instance = True
+        exclude = ['_password']

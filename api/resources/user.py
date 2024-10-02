@@ -1,13 +1,16 @@
 
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 from flask import request
 
 from api.schemas.user import UserSchema
+from auth.decorators import auth_role
 from models.user import User
 from extensions import db
 
 
 class UserList(Resource):
+    method_decorators = [auth_role("super-admin"), jwt_required()]
     def get(self):
         try:
             schema = UserSchema(many=True)

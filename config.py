@@ -13,3 +13,8 @@ class Config:
     FLASK_PORT = int(os.getenv('FLASK_PORT', 5000))
     FLASK_DEBUG = os.getenv('FLASK_DEBUG', 'True').lower() in ['true', '1', 'yes']
     
+    # JWT configuration
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+    JWT_TOKEN_LOCATION = ['headers']
+    JWT_IDENTITY_CLAIM = 'user_id' 
+    JWT_ACCESS_TOKEN_EXPIRES = 3600 # 1 hour
