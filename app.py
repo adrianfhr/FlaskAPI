@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 from api.views import blueprint
 from config import Config
-from extensions import db
+from extensions import db, migrate
 
 load_dotenv()
 
@@ -14,6 +14,7 @@ app.register_blueprint(blueprint)
 app.config.from_object(Config)
 
 db.init_app(app)
+migrate.init_app(app, db)
 
 if __name__ == '__main__':
     app.run(
